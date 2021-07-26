@@ -7,21 +7,22 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import java.awt.event.ItemEvent;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 
 public class PizzaFrame extends javax.swing.JFrame {
 
     //public ArrayList<String> PizzaList = new ArrayList<String>();
-
+    DefaultListModel listModel = new DefaultListModel();
     public PizzaFrame() {
         initComponents();
         this.setLocationRelativeTo(null);
-        /*SalsasList();
+        SalsasList();
         CarneList();
         QuesoList();
         VegetalesList();
         MariscosList();
         EspeciasList();
-        FruitList();*/
+        FruitList();
         //TypeEventoPizza();
     }
 
@@ -57,7 +58,7 @@ public class PizzaFrame extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jcmbTypePizzas = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        jListInfoPizzas = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -121,6 +122,11 @@ public class PizzaFrame extends javax.swing.JFrame {
         jLabel6.setText("Mariscos");
 
         jcmbTypeSelectedPizza.setFont(new java.awt.Font("Arial Narrow", 0, 14)); // NOI18N
+        jcmbTypeSelectedPizza.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcmbTypeSelectedPizzaItemStateChanged(evt);
+            }
+        });
 
         jcmbMariscos.setFont(new java.awt.Font("Arial Narrow", 0, 14)); // NOI18N
 
@@ -162,7 +168,7 @@ public class PizzaFrame extends javax.swing.JFrame {
             }
         });
 
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(jListInfoPizzas);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -192,9 +198,7 @@ public class PizzaFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jcmbTypePizzas, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(23, 23, 23)
-                                .addComponent(jcmbTypeSelectedPizza, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(32, 32, 32)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jcmbTypeSelectedPizza, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
@@ -213,7 +217,10 @@ public class PizzaFrame extends javax.swing.JFrame {
                                     .addComponent(jcmbMariscos, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jLabel2)
                             .addComponent(jLabel10)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(90, 90, 90)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -250,12 +257,12 @@ public class PizzaFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jcmbTypeSelectedPizza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jcmbTypePizzas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jcmbTypeSelectedPizza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcmbTypePizzas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -342,6 +349,84 @@ public class PizzaFrame extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jcmbTypePizzasItemStateChanged
+
+    private void jcmbTypeSelectedPizzaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcmbTypeSelectedPizzaItemStateChanged
+        if(evt.getStateChange() == ItemEvent.SELECTED){
+            String d = this.jcmbTypeSelectedPizza.getSelectedItem().toString();
+            int a = this.jcmbTypeSelectedPizza.getSelectedIndex();
+            System.out.println(a + " correct");
+            if(a == 2){
+                ArrayList<String> typePizza = new ArrayList<String>();
+                try {
+                    System.out.println("Getting Type Pizza");  // get the name list querry
+                    String queryString;
+                    queryString = "PREFIX owl: <http://www.w3.org/2002/07/owl#>"
+                            + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+                            + "PREFIX saidi:<http://www.semanticweb.org/tfgra/ontologies/2021/5/special-pizza#> "
+                            + "SELECT DISTINCT ?h "
+                            + "where {  saidi:NaturistaPizza rdfs:subClassOf ?o ."
+                            + " ?o owl:someValuesFrom ?h }";
+
+                    com.hp.hpl.jena.query.ResultSet results = OpenOWL.ExecSparQl(queryString); //all method ExecSparQl from OpenOWL class
+
+                    while (results.hasNext()) {
+                        QuerySolution soln = results.nextSolution();
+                        RDFNode c = soln.getResource("h");
+                        String v = String.valueOf(c.asResource().getLocalName());
+                        System.out.println("----->"+c);
+                        typePizza.add(v);
+                    }
+                    listModel.removeAllElements(); //  combobox nameList
+                    for (int i = 0; i < typePizza.size(); i++) {
+                        //jListInfoPizzas.addE
+                        listModel.addElement(typePizza.get(i));
+                    }
+                    jListInfoPizzas.setModel(listModel);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }else{
+                if(a == 3){
+                    ArrayList<String> typePizza = new ArrayList<String>();
+                    try {
+                        System.out.println("Getting Type Pizza");  // get the name list querry
+                        String queryString;
+                        queryString = "PREFIX owl: <http://www.w3.org/2002/07/owl#>"
+                                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+                                + "PREFIX saidi:<http://www.semanticweb.org/tfgra/ontologies/2021/5/special-pizza#> "
+                                + "SELECT DISTINCT ?h "
+                                + "where {  saidi:HawainaPizza rdfs:subClassOf ?o ."
+                                + " ?o owl:someValuesFrom ?h }";
+
+                        com.hp.hpl.jena.query.ResultSet results = OpenOWL.ExecSparQl(queryString); //all method ExecSparQl from OpenOWL class
+
+                        while (results.hasNext()) {
+
+                            QuerySolution soln = results.nextSolution();
+
+                            RDFNode x = soln.getResource("h");
+                            //x.asResource().getLocalName();
+                            String xx = String.valueOf(x.asResource().getLocalName());
+                            System.out.println("----->"+x);
+                            java.nio.ByteBuffer xxx = Charset.forName("UTF-8").encode(xx);
+
+                            String xs = xxx.toString();
+
+                            typePizza.add(xx);
+                        }
+                        listModel.removeAllElements(); //  combobox nameList
+                        for (int i = 0; i < typePizza.size(); i++) {
+                            //jListInfoPizzas.addE
+                            listModel.addElement(typePizza.get(i));
+                        }
+                        jListInfoPizzas.setModel(listModel);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }  
+            }
+        }
+    }//GEN-LAST:event_jcmbTypeSelectedPizzaItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -710,6 +795,37 @@ public class PizzaFrame extends javax.swing.JFrame {
         }
     }
     
+    public void listProductividad(){
+        ArrayList<String> listaRangosProductividad = new ArrayList<String>();
+            try {
+                System.out.println("Getting Type Pizza");  // get the name list querry
+                String queryString;
+                queryString = "PREFIX owl: <http://www.w3.org/2002/07/owl#>"
+                        + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
+                        + "PREFIX saidi:<http://www.semanticweb.org/tfgra/ontologies/2021/5/special-pizza#> "
+                        + "SELECT DISTINCT ?lista "
+                        + "where { {?lista  rdf:type  saidi:ProductividadPerson  ."
+                        + " }";
+
+                com.hp.hpl.jena.query.ResultSet results = OpenOWL.ExecSparQl(queryString); //all method ExecSparQl from OpenOWL class
+
+                while (results.hasNext()) {
+                    QuerySolution soln = results.nextSolution();
+                    RDFNode c = soln.getResource("h");
+                    String v = String.valueOf(c.asResource().getLocalName());
+                    System.out.println("----->"+c);
+                    listaRangosProductividad.add(v);
+                }
+                listModel.removeAllElements(); //  combobox nameList
+                for (int i = 0; i < listaRangosProductividad.size(); i++) {
+                    listModel.addElement(listaRangosProductividad.get(i));
+                }
+                jListInfoPizzas.setModel(listModel);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+    }
+    
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnPizzas;
@@ -724,7 +840,7 @@ public class PizzaFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JList<String> jListInfoPizzas;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> jcmbCarne;
